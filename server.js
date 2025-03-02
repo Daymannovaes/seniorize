@@ -4,47 +4,61 @@ const port = process.env.PORT || 3000 //tinha feito a linha acima a partir da do
 const hostname = 'localhost'
 
 let numbers = []
+let handled = false
+
+function matchRoute (req, res, method, url, callback) {
+    if (req.method === method && req.url === url) {
+        handled = true
+        callback(req, res)
+    }
+}
 
 const server = createServer((req, res) => {
+    handled = false
     req.on('error', (err) => {
         console.error(err)
         res.statusCode = 400
         res.end(JSON.stringify({error: err.message}))
     })
 
-    if(req.method === 'GET' && req.url === '/') {
+    matchRoute(req, res, 'GET', '/', () => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({message: "Hello world"}))
+        res.end(JSON.stringify({message: 'Hello world'}))
+    })
 
-    } else if (req.method === 'GET' && req.url === '/ping') {
+    matchRoute(req, res, 'GET', '/ping', () => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({message: "pong"}))
+        res.end(JSON.stringify({message: 'pong'}))
+    })
 
-    } else if (req.method === 'POST' && req.url === '/add-number') {
+    matchRoute(req, res, 'GET', '/get-numbers', () => {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({numbers: numbers}))
+    })
+
+    matchRoute(req, res, 'POST', '/add-number', () => {
         let body = ''
         req.on('data', (chunk) => {
             body += chunk.toString()
         })
         req.on('end', () => {
-            const parsedBody = JSON.parse(body)
+            parsedBody = JSON.parse(body)
             numbers.push(parsedBody.number)
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({message: "Successfully added", number: parsedBody.number}))
-        })        
+            res.end(JSON.stringify({message: 'Successfully added', number: parsedBody.number}))
+        })
+    })
 
-    } else if (req.method === 'GET' && req.url === '/get-numbers') {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({numbers: numbers}))
-
-    } else {
+    if (!handled) {
         res.statusCode = 404
         res.setHeader('Content-Type', 'application/json')
-        res.end("Not found")
+        res.end(JSON.stringify({message: 'Not found'}))
     }
+
 })
 
 server.listen(port, hostname, () => {
