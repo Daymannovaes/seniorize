@@ -4,17 +4,15 @@ const port = process.env.PORT || 3000 //tinha feito a linha acima a partir da do
 const hostname = 'localhost'
 
 let numbers = []
-let handled = false
 
 function matchRoute (req, res, method, url, callback) {
     if (req.method === method && req.url === url) {
-        handled = true
+        req.handled = true
         callback(req, res)
     }
 }
 
 const server = createServer((req, res) => {
-    handled = false
     req.on('error', (err) => {
         console.error(err)
         res.statusCode = 400
@@ -53,7 +51,7 @@ const server = createServer((req, res) => {
         })
     })
 
-    if (!handled) {
+    if (!req.handled) {
         res.statusCode = 404
         res.setHeader('Content-Type', 'application/json')
         res.end(JSON.stringify({message: 'Not found'}))
