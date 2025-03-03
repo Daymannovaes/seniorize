@@ -6,7 +6,7 @@ declare module 'node:http' {
         handled: boolean
     }
 }
-interface WishedBody {
+type WishedBody = {
     number: number
 }
 
