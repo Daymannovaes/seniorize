@@ -1,11 +1,10 @@
 //const {createServer} = require('node:http') //forma de importar apenas no JS, não funciona bem no TS
 import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 
-declare module 'node:http' {
-    interface IncomingMessage {
-        handled: boolean
-    }
+interface HandleableRequest extends IncomingMessage {
+    handled?: boolean
 }
+
 type WishedBody = {
     number: number
 }
@@ -16,7 +15,7 @@ const hostname: string = 'localhost'
 
 let numbers: Array<number> = []
 
-function matchRoute (req: IncomingMessage, res: ServerResponse, method: string, url: string, callback: Function) {
+function matchRoute (req: HandleableRequest, res: ServerResponse, method: string, url: string, callback: Function) {
     if (req.method === method && req.url === url) {
         req.handled = true
         res.statusCode = 200
@@ -25,31 +24,31 @@ function matchRoute (req: IncomingMessage, res: ServerResponse, method: string, 
     }
 }
 
-function handleBadRequest(err: Error, req: IncomingMessage, res: ServerResponse) {
+function handleBadRequest(err: Error, req: HandleableRequest, res: ServerResponse) {
     console.error(err)
     res.statusCode = 400
     res.end(JSON.stringify({error: err.message}))
 }
 
-function handleUnknownPath(req: IncomingMessage, res: ServerResponse) {
+function handleUnknownPath(req: HandleableRequest, res: ServerResponse) {
     res.statusCode = 404
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify({message: 'Not found'}))
 }
 
-function handleIndex(req: IncomingMessage, res: ServerResponse) {
+function handleIndex(req: HandleableRequest, res: ServerResponse) {
     res.end(JSON.stringify({message: 'Hello world'}))
 }
 
-function handlePing(req: IncomingMessage, res: ServerResponse) {
+function handlePing(req: HandleableRequest, res: ServerResponse) {
     res.end(JSON.stringify({message: 'pong'}))
 }
 
-function handleGetNumbers (req: IncomingMessage, res: ServerResponse) {
+function handleGetNumbers (req: HandleableRequest, res: ServerResponse) {
     res.end(JSON.stringify({numbers: numbers}))
 }
 
-function handleAddNumber (req: IncomingMessage, res: ServerResponse) {
+function handleAddNumber (req: HandleableRequest, res: ServerResponse) {
     let body: string = ''
     req.on('data', (chunk: Buffer) => {
         body += chunk.toString()
@@ -61,7 +60,7 @@ function handleAddNumber (req: IncomingMessage, res: ServerResponse) {
     })
 }
 
-const server = createServer((req: IncomingMessage, res: ServerResponse) => {
+const server = createServer((req: HandleableRequest, res: ServerResponse) => {
 
     req.on('error', handleBadRequest)
 
