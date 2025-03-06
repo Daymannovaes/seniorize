@@ -1,4 +1,4 @@
-interface mentorship_agreement {
+interface MentorshipAgreement {
     id: number
     student_id: number
     start_date: Date

@@ -1,4 +1,4 @@
-interface student {
+interface Student {
     id: number
     name: string
     phone: string
