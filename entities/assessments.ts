@@ -1,4 +1,5 @@
 interface assessment {
+    id: number
     student_id: number
     assessment_datetime: Date
     skills: {
