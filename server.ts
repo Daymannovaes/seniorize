@@ -1,8 +1,11 @@
 import express, { Request, Response } from 'express'
+import studentsRoutes from './routes/students'
 
 const app = express()
 const port = process.env.PORT || 3000
 app.use(express.json())
+
+app.use('/students', studentsRoutes)
 
 const numbers: Array<number> = []
 

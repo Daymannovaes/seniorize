@@ -1,4 +1,4 @@
-interface MentorshipAgreement {
+export interface MentorshipAgreement {
     id: number
     student_id: number
     start_date: Date
