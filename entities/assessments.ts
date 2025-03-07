@@ -1,4 +1,4 @@
-interface Assessment {
+export interface Assessment {
     id: number
     student_id: number
     created_at: Date
