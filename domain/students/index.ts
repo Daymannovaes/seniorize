@@ -25,7 +25,7 @@ export function createStudent (student: Student): Student | null{
 }
 
 export function getSingleStudent(id: number): Student | null {
-    const foundStudent = students.find((student) => student.id === id) // arrow function de uma linha tem o return implícito
+    const foundStudent = students.find((student) => student.id === id && student.active) // arrow function de uma linha tem o return implícito
     if (foundStudent) {
         return foundStudent
     }
