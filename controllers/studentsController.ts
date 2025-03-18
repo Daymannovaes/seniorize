@@ -14,9 +14,9 @@ export function handleGetSingleStudent (req: Request, res: Response) {
 
 export function handlePostStudents (req: Request, res: Response) {
     const student: Student = req.body
-    const new_student = createStudent(student)
-    if (new_student) {
-        res.status(200).json(new_student)
+    const newStudent = createStudent(student)
+    if (newStudent) {
+        res.status(200).json(newStudent)
     } else {
         res.status(400).json({message: 'Mandatory data: name, phone'})
     }
@@ -29,8 +29,8 @@ export function handlePutStudents (req: Request, res: Response) {
     if (isNaN(id)) {
         res.status(400).json({message: 'Id must be a number'})
     } else {
-        const updated_student = updateStudent(id, student)
-        res.status(200).json(updated_student)
+        const updatedStudent = updateStudent(id, student)
+        res.status(200).json(updatedStudent)
     }
 }
 
@@ -39,8 +39,8 @@ export function handleDeleteStudents (req: Request, res: Response) {
     if (isNaN(id)) {
         res.status(400).json({message: 'Id must be a number'})
     } else {
-        const deleted_student = deleteStudent(id)
-        res.status(200).json(deleted_student)
+        const deletedStudent = deleteStudent(id)
+        res.status(200).json(deletedStudent)
     }
 }
 
@@ -50,6 +50,6 @@ export function handleGetStudents (req: Request, res: Response) {
 }
 
 export function handleGetActiveStudents (req: Request, res: Response) {
-    const active_students = getActiveStudents()
-    res.status(200).json(active_students)
+    const activeStudents = getActiveStudents()
+    res.status(200).json(activeStudents)
 }

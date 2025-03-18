@@ -1,66 +1,65 @@
 import { Student } from '../../entities/students'
 
-const students: Array<Student> = [] //isso deveria mesmo ficar nesse arquivo, ou tem um lugar melhor?
+const students: Array<Student> = []
 
 export function createStudent (student: Student): Student | null{
-    const last_index = students.length
+    const lastIndex = students.length
     
     if (!(student.name && student.phone)) {
         return null
     }
-    const new_student: Student = {
-        id: last_index + 1,
+    const newStudent: Student = {
+        id: lastIndex + 1,
         active: true,        
         name: student.name,
         phone: student.phone
     }
-    if (student.main_programming_language) {
-        new_student.main_programming_language = student.main_programming_language
+    if (student.mainProgrammingLanguage) {
+        newStudent.mainProgrammingLanguage = student.mainProgrammingLanguage
     }
-    if (student.hired_seniority) {
-        new_student.hired_seniority = student.hired_seniority
+    if (student.hiredSeniority) {
+        newStudent.hiredSeniority = student.hiredSeniority
     }
-    students.push(new_student)
-    return new_student
+    students.push(newStudent)
+    return newStudent
 }
 
 export function getSingleStudent(id: number): Student | null {
-    for (let student of students) { // tem alguma forma mais otimizada pra fazer isso?
-        if (student.id === id) {
-            return student
-        }
+    const foundStudent = students.find((student) => student.id === id) // arrow function de uma linha tem o return implícito
+    if (foundStudent) {
+        return foundStudent
     }
     return null
+
 }
 
-export function updateStudent (id: number, student_new_data: Student): Student | null {
-    for (let student of students) {
-        if (student.id === id) {
-            if (student_new_data.name) {
-                student.name = student_new_data.name
-            }
-            if (student_new_data.phone) {
-                student.phone = student_new_data.phone
-            }
-            if (student_new_data.main_programming_language) {
-                student.main_programming_language = student_new_data.main_programming_language
-            }
-            if (student_new_data.hired_seniority) {
-                student.hired_seniority = student_new_data.hired_seniority
-            }
-            return student
+export function updateStudent (id: number, studentNewData: Student): Student | null {
+    
+    const student = getSingleStudent(id)
+    if (student) {
+        if (studentNewData.name) {
+            student.name = studentNewData.name
         }
+        if (studentNewData.phone) {
+            student.phone = studentNewData.phone
+        }
+        if (studentNewData.mainProgrammingLanguage) {
+            student.mainProgrammingLanguage = studentNewData.mainProgrammingLanguage
+        }
+        if (studentNewData.hiredSeniority) {
+            student.hiredSeniority = studentNewData.hiredSeniority
+        }
+        return student
     }
     return null
 }
 
 export function deleteStudent (id: number): Student | null {
-    for (let student of students) {
-        if (student.id === id) {
-            student.active = false
-            student.deleted_at = new Date()
-            return student            
-        }
+    const student = getSingleStudent(id)
+    if (student) {
+        student.active = false
+        student.deletedAt = new Date()
+        return student
     }
     return null
 }
@@ -70,11 +69,6 @@ export function getAllStudents() {
 }
 
 export function getActiveStudents(): Array<Student> {
-    const active_students: Array<Student> = []
-    for (let student of students) {
-        if (student.active) {
-            active_students.push(student) //tem uma forma mais otimizada de fazer isso?
-        }
-    }
-    return active_students
+    const activeStudents: Array<Student> = students.filter((student) => student.active === true)
+    return activeStudents
 }
