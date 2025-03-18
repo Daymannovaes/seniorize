@@ -5,4 +5,6 @@ export interface MentorshipAgreement {
     expectedEndDate: Date
     syncClassesAmount: number
     agreedPayment: number
+    active: boolean
+    deletedAt?: Date
 }
